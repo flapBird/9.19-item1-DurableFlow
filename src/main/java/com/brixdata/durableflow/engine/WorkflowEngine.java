@@ -321,10 +321,14 @@ public final class WorkflowEngine implements AutoCloseable {
             scheduleCompensation(state, now);
             return;
         }
-        // 有步骤最终失败 -> 进入补偿/失败流程
+        // 有步骤最终失败 -> 待其余在执行/等待唤醒的步骤收尾后，进入补偿/失败流程
         boolean anyFailed = state.steps.values().stream().anyMatch(st -> st.status == StepStatus.FAILED);
         if (anyFailed) {
-            beginCompensation(state);
+            boolean anyActive = state.steps.values().stream().anyMatch(
+                    st -> st.status == StepStatus.RUNNING || st.status == StepStatus.WAITING);
+            if (!anyActive) {
+                beginCompensation(state);
+            }
             return;
         }
         // 全部步骤已解决 -> 完成
