@@ -51,6 +51,8 @@ public final class StateRebuilder {
                         step(instance, event).markCompensationRunning((int) event.longData("attempt", 1));
                 case WorkflowEvent.Types.COMPENSATION_STEP_SUCCEEDED ->
                         step(instance, event).markCompensated();
+                case WorkflowEvent.Types.COMPENSATION_STEP_FAILED ->
+                        step(instance, event).setCompensationRetryAt(event.longData("retryAt", 0));
                 case WorkflowEvent.Types.WORKFLOW_COMPENSATED ->
                         instance.setStatus(WorkflowStatus.COMPENSATED);
                 case WorkflowEvent.Types.WORKFLOW_COMPENSATION_FAILED ->

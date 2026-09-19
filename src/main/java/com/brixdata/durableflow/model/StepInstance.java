@@ -12,6 +12,7 @@ public class StepInstance {
     private long startedAt;
     private long finishedAt;
     private int compensationAttempts;
+    private long compensationRetryAt;
     private boolean compensated;
 
     public StepInstance(String stepId) {
@@ -53,6 +54,15 @@ public class StepInstance {
 
     public int getCompensationAttempts() {
         return compensationAttempts;
+    }
+
+    /** 补偿失败后的绝对重试时间（epoch millis），0 表示无待重试。 */
+    public long getCompensationRetryAt() {
+        return compensationRetryAt;
+    }
+
+    public void setCompensationRetryAt(long compensationRetryAt) {
+        this.compensationRetryAt = compensationRetryAt;
     }
 
     public boolean isCompensated() {
