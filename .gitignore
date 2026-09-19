@@ -1,0 +1,21 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# 本地配置（保留 example 模板）
+config/durableflow.yaml
+
+# 本地运行数据（保留目录占位文件）
+data/*
+!data/.gitkeep
+!data/README.md
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# macOS
+.DS_Store
