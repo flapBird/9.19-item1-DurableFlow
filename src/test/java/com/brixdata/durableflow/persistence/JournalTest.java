@@ -60,7 +60,7 @@ class JournalTest {
 
     @Test
     void eventRoundTripPreservesPayload() {
-        Event original = event(Event.EventType.RETRY_SCHEDULED, "b");
+        Event original = event(Event.EventType.STEP_FAILED, "b");
         Event parsed = Event.parse(original.toLine());
         assertEquals(original.type(), parsed.type());
         assertEquals(original.time(), parsed.time());

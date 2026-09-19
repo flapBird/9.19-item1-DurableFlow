@@ -22,23 +22,28 @@ public record Event(EventType type, long time, ObjectNode data) {
         STEP_STARTED,
         /** 步骤执行成功，data 含 stepId、attempt、result、seq（完成序号）。 */
         STEP_COMPLETED,
-        /** 步骤单次尝试失败，data 含 stepId、attempt、error。 */
+        /**
+         * 步骤单次尝试失败，data 含 stepId、attempt、error、final。
+         * final=false 时含 dueAt（下次重试的绝对时间，持久化后重启不重计时）；
+         * final=true 表示重试次数耗尽。
+         */
         STEP_FAILED,
-        /** 步骤等待重试，data 含 stepId、attempt（下一次）、dueAt（绝对时间）。 */
-        RETRY_SCHEDULED,
         /** 定时等待步骤已排期，data 含 stepId、resumeAt（绝对时间）。 */
         WAIT_SCHEDULED,
-        /** 步骤因条件不满足或依赖被跳过而跳过。 */
+        /** 步骤因条件不满足或依赖被跳过而跳过，data 含 stepId、reason。 */
         STEP_SKIPPED,
-        /** 补偿开始，data 含 stepId、attempt。 */
+        /** 补偿开始执行，data 含 stepId、attempt。 */
         COMPENSATION_STARTED,
-        /** 补偿完成。 */
+        /** 补偿执行成功，data 含 stepId。 */
         COMPENSATION_COMPLETED,
-        /** 补偿等待重试，data 含 stepId、attempt、dueAt。 */
-        COMPENSATION_RETRY_SCHEDULED,
+        /**
+         * 补偿单次尝试失败，data 含 stepId、attempt、error、final；
+         * final=false 时含 dueAt（下次补偿重试的绝对时间）。
+         */
+        COMPENSATION_FAILED,
         /** 工作流成功完成，data 含 result。 */
         WORKFLOW_COMPLETED,
-        /** 工作流最终失败，data 含 error、compensated。 */
+        /** 工作流最终失败，data 含 error、compensatedSteps、failedCompensations。 */
         WORKFLOW_FAILED
     }
 
