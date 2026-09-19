@@ -1,0 +1,52 @@
+{
+  "id": "order-flow",
+  "steps": [
+    {
+      "id": "reserve-stock",
+      "type": "TASK",
+      "handler": "log",
+      "args": { "message": "reserve-stock" },
+      "retry": { "maxAttempts": 3, "backoffMillis": 500, "multiplier": 2.0 },
+      "compensationHandler": "log",
+      "compensationArgs": { "message": "cancel-reserve-stock" }
+    },
+    {
+      "id": "charge",
+      "type": "TASK",
+      "handler": "log",
+      "args": { "message": "charge" },
+      "dependsOn": ["reserve-stock"],
+      "compensationHandler": "log",
+      "compensationArgs": { "message": "refund" }
+    },
+    {
+      "id": "wait-warehouse",
+      "type": "WAIT",
+      "waitMillis": 1000,
+      "dependsOn": ["charge"]
+    },
+    {
+      "id": "express-ship",
+      "type": "TASK",
+      "handler": "log",
+      "args": { "message": "express-ship" },
+      "dependsOn": ["wait-warehouse"],
+      "condition": "input.express == true"
+    },
+    {
+      "id": "standard-ship",
+      "type": "TASK",
+      "handler": "log",
+      "args": { "message": "standard-ship" },
+      "dependsOn": ["wait-warehouse"],
+      "condition": "input.express != true"
+    },
+    {
+      "id": "notify",
+      "type": "TASK",
+      "handler": "log",
+      "args": { "message": "notify-customer" },
+      "dependsOn": ["express-ship", "standard-ship"]
+    }
+  ]
+}

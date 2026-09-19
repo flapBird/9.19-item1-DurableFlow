@@ -2,21 +2,24 @@
 #
 # 使用方式：复制本文件为 config/durableflow.yaml，再按本地环境修改。
 # config/durableflow.yaml 不纳入版本控制（见 .gitignore）。
+# 所有配置项均可省略，省略时使用默认值。
 
 durableflow:
-  # 引擎节点标识，多节点部署时必须唯一
+  # 引擎节点标识，多节点部署时必须唯一（默认 default-node）
   node-id: default-node
 
   storage:
-    # 本地持久化数据目录（工作流状态、检查点、日志索引等）
+    # 本地持久化数据目录：事件日志、幂等结果、处理器输出（默认 ./data）
     data-dir: ./data
-    # 数据文件滚动大小（字节）
-    segment-size-bytes: 67108864
 
   execution:
-    # 工作流步骤最大并发数
+    # 同时运行的任务最大并发数（默认 4）
     max-concurrency: 4
-    # 单步执行超时（秒）
-    step-timeout-seconds: 300
-    # 崩溃恢复时的重试次数
-    recovery-max-attempts: 3
+    # 步骤未单独配置 retry 时使用的默认重试策略
+    default-retry:
+      # 最大尝试次数（含首次执行），1 表示不重试（默认 3）
+      max-attempts: 3
+      # 首次失败后的退避基数，毫秒（默认 1000）
+      backoff-millis: 1000
+      # 每次失败后退避时间的倍增因子（默认 2.0）
+      multiplier: 2.0
