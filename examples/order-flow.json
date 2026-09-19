@@ -1,0 +1,42 @@
+{
+  "name": "order-flow",
+  "steps": [
+    {
+      "id": "check-stock",
+      "type": "TASK",
+      "handler": "echo",
+      "config": {"message": "库存检查通过"},
+      "retry": {"maxAttempts": 3, "initialBackoffMs": 500, "multiplier": 2.0, "maxBackoffMs": 5000},
+      "compensation": {"handler": "echo", "config": {"message": "释放库存"}}
+    },
+    {
+      "id": "wait-payment",
+      "type": "WAIT",
+      "waitMs": 2000,
+      "dependsOn": ["check-stock"]
+    },
+    {
+      "id": "charge",
+      "type": "TASK",
+      "handler": "counter",
+      "config": {"name": "charges"},
+      "dependsOn": ["wait-payment"],
+      "compensation": {"handler": "echo", "config": {"message": "原路退款"}}
+    },
+    {
+      "id": "gift",
+      "type": "TASK",
+      "handler": "echo",
+      "config": {"message": "发放赠品"},
+      "dependsOn": ["charge"],
+      "condition": "input.vip == true"
+    },
+    {
+      "id": "notify",
+      "type": "TASK",
+      "handler": "echo",
+      "config": {"message": "通知用户"},
+      "dependsOn": ["charge"]
+    }
+  ]
+}

@@ -2,21 +2,14 @@
 #
 # 使用方式：复制本文件为 config/durableflow.yaml，再按本地环境修改。
 # config/durableflow.yaml 不纳入版本控制（见 .gitignore）。
+# 命令行选项 --data-dir / --max-concurrency 优先于本文件中的配置。
 
 durableflow:
-  # 引擎节点标识，多节点部署时必须唯一
-  node-id: default-node
-
   storage:
-    # 本地持久化数据目录（工作流状态、检查点、日志索引等）
+    # 本地持久化数据目录：每个工作流运行对应
+    # data-dir/workflows/<runId>.journal（事件日志）与 <runId>.effects（幂等效果存储）
     data-dir: ./data
-    # 数据文件滚动大小（字节）
-    segment-size-bytes: 67108864
 
   execution:
-    # 工作流步骤最大并发数
+    # 同时运行的步骤数上限
     max-concurrency: 4
-    # 单步执行超时（秒）
-    step-timeout-seconds: 300
-    # 崩溃恢复时的重试次数
-    recovery-max-attempts: 3

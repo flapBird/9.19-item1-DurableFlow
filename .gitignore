@@ -1,6 +1,9 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
+# maven-shade-plugin 生成的中间文件
+dependency-reduced-pom.xml
+
 # 本地配置（保留 example 模板）
 config/durableflow.yaml
 
