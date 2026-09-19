@@ -1,4 +1,5 @@
 target/
+dependency-reduced-pom.xml
 !.mvn/wrapper/maven-wrapper.jar
 
 # 本地配置（保留 example 模板）
